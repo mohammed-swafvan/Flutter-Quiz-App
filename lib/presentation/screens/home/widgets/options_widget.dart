@@ -11,7 +11,7 @@ class OptionWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: 8),
       decoration: BoxDecoration(
-          color: CustomColor.kWhiteColor,
+          color: Theme.of(context).brightness == Brightness.dark ? CustomColor.kBlackColor : CustomColor.kWhiteColor,
           borderRadius: kBorderRadius10,
           border: Border.all(
             width: 2,

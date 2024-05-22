@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz_app/core/app_style.dart';
 import 'package:flutter_quiz_app/core/constants.dart';
 import 'package:flutter_quiz_app/core/custom_color.dart';
 import 'package:flutter_quiz_app/presentation/screens/home/widgets/options_widget.dart';
@@ -36,9 +37,9 @@ class HomePage extends StatelessWidget {
                           child: Center(
                             child: Container(
                               padding: const EdgeInsets.all(18),
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: CustomColor.kWhiteColor,
+                                color: Get.isDarkMode ? CustomColor.kBlackColor : CustomColor.kWhiteColor,
                               ),
                               child: const Text(
                                 '18',
@@ -58,7 +59,7 @@ class HomePage extends StatelessWidget {
                             height: size.height / 4.2,
                             width: size.width * 0.9,
                             decoration: BoxDecoration(
-                              color: CustomColor.kWhiteColor,
+                              color: Get.isDarkMode ? CustomColor.kBlackColor : CustomColor.kWhiteColor,
                               borderRadius: kBorderRadius20,
                               boxShadow: [
                                 BoxShadow(
@@ -155,6 +156,7 @@ class HomePage extends StatelessWidget {
                             transition: Transition.fadeIn,
                           );
                         },
+                        style: AppStyle.kElevatedButtonStyle(),
                         child: const Text(
                           'Next',
                           style: TextStyle(fontWeight: FontWeight.w600),
