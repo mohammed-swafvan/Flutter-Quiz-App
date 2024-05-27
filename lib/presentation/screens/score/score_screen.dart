@@ -7,8 +7,31 @@ import 'package:flutter_quiz_app/presentation/screens/score/widgets/status_infor
 import 'package:flutter_quiz_app/presentation/screens/score/widgets/your_score.dart';
 import 'package:get/get.dart';
 
-class ScorePage extends StatelessWidget {
-  const ScorePage({super.key});
+class ScorePage extends StatefulWidget {
+  const ScorePage({
+    super.key,
+    required this.correctAnswer,
+    required this.wrongAnswer,
+    required this.totalQuestions,
+  });
+  final int correctAnswer;
+  final int wrongAnswer;
+  final int totalQuestions;
+
+  @override
+  State<ScorePage> createState() => _ScorePageState();
+}
+
+class _ScorePageState extends State<ScorePage> {
+  bool isLoading = true;
+  int totalPoint = 0;
+  int remainingQuestion = 0;
+
+  @override
+  void initState() {
+    calculateScore();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +80,7 @@ class ScorePage extends StatelessWidget {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(18).copyWith(right: 12),
-                              child: const Column(
+                              child: Column(
                                 children: [
                                   Expanded(
                                     child: Center(
@@ -95,19 +118,27 @@ class ScorePage extends StatelessWidget {
                                             flex: 2,
                                             child: StatusInfomation(
                                               title: "Correct",
-                                              value: "07",
+                                              value: widget.correctAnswer.toString(),
                                               color: CustomColor.kSuccessColor,
                                             ),
                                           ),
                                           Expanded(
                                             flex: 3,
-                                            child: SizedBox(),
+                                            child: SizedBox(
+                                              child: Center(
+                                                child: StatusInfomation(
+                                                  title: "Remaining",
+                                                  value: remainingQuestion.toString(),
+                                                  color: CustomColor.kGreyColor,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                           Expanded(
                                             flex: 2,
                                             child: StatusInfomation(
                                               title: "Wrong",
-                                              value: "03",
+                                              value: widget.wrongAnswer.toString(),
                                               color: CustomColor.kFailColor,
                                             ),
                                           ),
@@ -193,5 +224,12 @@ class ScorePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void calculateScore() {
+    int attendedQuestion = widget.correctAnswer + widget.wrongAnswer;
+    setState(() {
+      remainingQuestion = widget.totalQuestions - attendedQuestion;
+    });
   }
 }

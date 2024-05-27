@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   int secondReminder = 20;
   int countOfCorrectAnswer = 0;
   int countOfWrongAnswer = 0;
+  String? selectedOption;
 
   @override
   void initState() {
@@ -113,24 +114,21 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   ),
                                   child: Padding(
-                                    padding: kEdgeInsetsHor18,
+                                    padding: kEdgeInsetsHor18.copyWith(top: 4),
                                     child: Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
                                             Text(
-                                              countOfCorrectAnswer.toString(),
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                color: CustomColor.kSuccessColor,
-                                              ),
-                                            ),
-                                            Text(
-                                              countOfWrongAnswer.toString(),
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                color: CustomColor.kFailColor,
+                                              data[questionNum]['difficulty'],
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: data[questionNum]['difficulty'] == 'easy'
+                                                    ? CustomColor.kSuccessColor
+                                                    : data[questionNum]['difficulty'] == 'medium'
+                                                        ? CustomColor.kOrangeColor
+                                                        : CustomColor.kFailColor,
                                               ),
                                             ),
                                           ],
@@ -172,9 +170,13 @@ class _HomePageState extends State<HomePage> {
                                     spacing: 4,
                                     runSpacing: 4,
                                     children: shuffledOptions.map((option) {
+                                      bool isCorrect = option == data[questionNum]['correct_answer'];
                                       return OptionWidget(
                                         option: option,
-                                        onTap: () => submitAnswer(option),
+                                        onTap: () => timer.isActive ? submitAnswer(option) : null,
+                                        isSelected: selectedOption != null,
+                                        isWrong: option != data[questionNum]['correct_answer'],
+                                        isCorrect: isCorrect,
                                       );
                                     }).toList(),
                                   ),
@@ -249,7 +251,11 @@ class _HomePageState extends State<HomePage> {
     } else {
       timer.cancel();
       Get.to(
-        () => const ScorePage(),
+        () => ScorePage(
+          correctAnswer: countOfCorrectAnswer,
+          wrongAnswer: countOfWrongAnswer,
+          totalQuestions: data.length,
+        ),
         transition: Transition.fadeIn,
       );
     }
@@ -269,15 +275,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   void submitAnswer(String option) {
+    timer.cancel();
     setState(() {
       String correctAnswer = data[questionNum]['correct_answer'];
+      selectedOption = option;
       if (correctAnswer == option) {
         countOfCorrectAnswer++;
       } else {
         countOfWrongAnswer++;
       }
     });
-    nextQuestion();
+    Future.delayed(const Duration(seconds: 2), () {
+      selectedOption = null;
+      startTimer();
+      nextQuestion();
+    });
   }
 
   void clearAll() {
@@ -290,6 +302,7 @@ class _HomePageState extends State<HomePage> {
       secondReminder = 20;
       countOfCorrectAnswer = 0;
       countOfWrongAnswer = 0;
+      selectedOption = null;
     });
   }
 }
