@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quiz_app/core/constants.dart';
 import 'package:flutter_quiz_app/core/custom_color.dart';
+import 'package:flutter_quiz_app/presentation/screens/home/home_page.dart';
 import 'package:flutter_quiz_app/presentation/screens/score/widgets/actions_icon.dart';
 import 'package:flutter_quiz_app/presentation/screens/score/widgets/status_information.dart';
 import 'package:flutter_quiz_app/presentation/screens/score/widgets/your_score.dart';
@@ -136,7 +137,10 @@ class ScorePage extends StatelessWidget {
                               text: 'Paly Again',
                               icon: Icons.refresh_rounded,
                               bgColor: CustomColor.kOrangeColor,
-                              onTap: () {},
+                              onTap: () => Get.off(
+                                () => const HomePage(),
+                                transition: Transition.fade,
+                              ),
                             ),
                             ActionsIcon(
                               text: 'Review Answer',
@@ -166,7 +170,10 @@ class ScorePage extends StatelessWidget {
                               text: 'Home',
                               icon: Icons.home_rounded,
                               bgColor: CustomColor.kPrimaryColor,
-                              onTap: () => Navigator.of(context).pop(),
+                              onTap: () => Get.off(
+                                () => const HomePage(),
+                                transition: Transition.fade,
+                              ),
                             ),
                             ActionsIcon(
                               text: 'Settings',
